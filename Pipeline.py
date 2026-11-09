@@ -27,7 +27,6 @@ def parse_fasta(file_path):
     return sequences
 
 def search_peptides(proteome, peptides):
-    """Effectue la recherche exacte des peptides dans le protéome."""
     hits = []
     for pep_id, pep_seq in peptides.items():
         pep_seq_clean = pep_seq.upper()
@@ -52,10 +51,8 @@ def run_pipeline():
     
     print("1. Chargement des données...")
     proteome = parse_fasta("Proteom.fasta")
-    peptides = parse_fasta("general_amps.fasta") # Remplace par le nom exact de ton fichier FASTA de peptides
-    
-    # Restreindre aux 1000 premiers peptides pour le test
-    peptides = dict(list(peptides.items())[:1000])
+    peptides = parse_fasta("general_amps.fasta")   
+    peptides = dict(list(peptides.items())[:])
     
     print(f"   - Protéines chargées : {len(proteome)}")
     print(f"   - Peptides testés (sous-ensemble) : {len(peptides)}")
@@ -116,11 +113,8 @@ def run_pipeline():
         if len(pvals) > 0:
             _, corrected, _, _ = multipletests(pvals, alpha=0.05, method='fdr_bh')
             df_results.loc[group.index, 'adj_p_value_fdr'] = corrected
-            
-    # Sauvegarde du tableau complet
+        
     df_results.to_csv("results/statistical_summary_fdr.csv", index=False)
-    
-    # Filtrage des peptides statistiquement significatifs (FDR < 0.05)
     df_significant = df_results[df_results['adj_p_value_fdr'] < 0.05]
     df_significant.to_csv("results/significant_peptides.csv", index=False)
     
