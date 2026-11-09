@@ -1,0 +1,2 @@
+peptide_id,length,observed_hits,expected_chance_hits,empirical_p_value,adj_p_value_fdr
+DRAMP03472,74,106,0.0,0.0196078431372549,0.0392156862745098
